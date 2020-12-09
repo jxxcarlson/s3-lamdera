@@ -1,13 +1,17 @@
 module Frontend exposing (..)
 
+import Base64
 import Browser exposing (UrlRequest(..))
 import Browser.Navigation as Nav
 import Element.Background as Background
 import Element.Font as Font
 import Element.Border as Border
 import Element exposing(..)
+import File
+import File.Select
 import Html exposing(Html)
 import Lamdera
+import Task
 import Types exposing (..)
 import Url
 
@@ -32,6 +36,7 @@ init : Url.Url -> Nav.Key -> ( Model, Cmd FrontendMsg )
 init url key =
     ( { key = key
       , message = "Welcome to Lamdera! You're looking at the auto-generated base implementation. Check out src/Frontend.elm to start coding!"
+      , imageContent = Nothing
       }
     , Cmd.none
     )
@@ -57,6 +62,22 @@ update msg model =
 
         NoOpFrontendMsg ->
             ( model, Cmd.none )
+
+        -- IMAGE UPLOAD
+
+        ImageRequested ->
+           ( model, File.Select.file ["image/png","image/jpg"] ImageSelected )
+
+        ImageSelected file ->
+            let
+              task = Task.map Base64.fromBytes (File.toBytes file)
+            in
+             ( model
+                  , Task.perform ImageLoaded task
+                  )
+
+
+        ImageLoaded content -> ( {model | imageContent = content}, Cmd.none )
 
 
 updateFromBackend : ToFrontend -> Model -> ( Model, Cmd FrontendMsg )
