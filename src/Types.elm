@@ -4,14 +4,22 @@ import Browser exposing (UrlRequest)
 import Browser.Navigation exposing (Key)
 import Url exposing (Url)
 import File exposing(File)
+import Time
 
 
 type alias FrontendModel =
     { key : Key
-    , imageContent : Maybe String
     , message : String
+    , fileContents : Maybe String
+    , fileData : Maybe FileData
     }
 
+type alias FileData = {
+     name : String
+   , mime : String
+   , size : Int
+   , lastModified: Time.Posix
+  }
 
 type alias BackendModel =
     { message : String

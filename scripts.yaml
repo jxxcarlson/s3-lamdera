@@ -1,0 +1,19 @@
+scripts:
+
+  clean:
+    - rm -rf ~/.lamdera/elm
+    - rm -rf lamdera-stuff
+
+  make:
+    - lamdera make src/Frontend.elm
+    - lamdera make src/Backend.elm
+
+  live: lamdera live
+
+  find-lamdera: ps aux | grep lamdera
+
+  server: sudo lsof -n -i :8000
+
+  cloc:
+    cmd: cloc --by-file src --exclude-dir=Evergreen
+    desc: Count lines of code
